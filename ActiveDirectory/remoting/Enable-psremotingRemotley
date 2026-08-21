@@ -1,0 +1,17 @@
+# copied from https://adamtheautomator.com/enable-psremoting/
+# author Tyler Muir @ps_tylerm
+
+$SessionArgs = @{
+     ComputerName  = 'ABC123NOTMYPC'      #hostname of the machine to enable
+     Credential    = Get-Credential
+     SessionOption = New-CimSessionOption -Protocol Dcom
+ }
+ $MethodArgs = @{
+     ClassName     = 'Win32_Process'
+     MethodName    = 'Create'
+     CimSession    = New-CimSession @SessionArgs
+     Arguments     = @{
+         CommandLine = "powershell -NoLogo -NoProfile -NonInteractive -WindowStyle Hidden  Start-Process powershell -NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -ArgumentList 'enable-PSremoting -force'"
+     }
+ }
+ Invoke-CimMethod @MethodArgs
